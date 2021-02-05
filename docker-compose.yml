@@ -1,0 +1,28 @@
+version: "3.7" 
+services:
+  consulta_medica:
+    build:
+      context: ./consulta_medica
+    ports:
+      - 5001:5000
+    volumes:
+      - "./consulta_medica/src:/app/"
+#    environment: 
+#      DATABASE_HOST : "prd-database.c7tilsxdbjso.us-east-1.rds.amazonaws.com"
+#      DATABASE_USER : "db"
+#      DATABASE_PASS : "puEsyAtMlO9PaUHn"
+#      DATABASE_NAME : "certificadosbwmv"
+#  mysql:
+#    image: mysql:5.7
+#    container_name: mysql
+#    ports:
+#      - "3307:3306"
+#    volumes:
+#      - mysql:/var/lib/mysql/
+#    environment:
+#      MYSQL_DATABASE: 'database'
+#      MYSQL_USER: 'root'
+#      MYSQL_PASSWORD: '12345678'
+#      MYSQL_ROOT_PASSWORD: '12345'
+#volumes:
+#  mysql:
