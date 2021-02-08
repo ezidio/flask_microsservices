@@ -7,22 +7,43 @@ services:
       - 5001:5000
     volumes:
       - "./consulta_medica/src:/app/"
-#    environment: 
-#      DATABASE_HOST : "prd-database.c7tilsxdbjso.us-east-1.rds.amazonaws.com"
-#      DATABASE_USER : "db"
-#      DATABASE_PASS : "puEsyAtMlO9PaUHn"
-#      DATABASE_NAME : "certificadosbwmv"
-#  mysql:
-#    image: mysql:5.7
-#    container_name: mysql
-#    ports:
-#      - "3307:3306"
-#    volumes:
-#      - mysql:/var/lib/mysql/
-#    environment:
-#      MYSQL_DATABASE: 'database'
-#      MYSQL_USER: 'root'
-#      MYSQL_PASSWORD: '12345678'
-#      MYSQL_ROOT_PASSWORD: '12345'
-#volumes:
-#  mysql:
+    environment: 
+      SENTRY_DSN: "https://8adf5324c0f44afaa03d504655beb281@o516857.ingest.sentry.io/5623845"
+      KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_BROKERS: kafka:9092
+      DATABASE_URL: postgresql:///postgres:testpostgres@postgres:5432
+    links: 
+      - kafka
+  financeiro:
+    build:
+      context: ./financeiro
+    ports:
+      - 5002:5000
+    volumes:
+      - "./financeiro/src:/app/"
+    environment: 
+      SENTRY_DSN: "https://8adf5324c0f44afaa03d504655beb281@o516857.ingest.sentry.io/5623845"
+      KAFKA_SECURITY_PROTOCOL: PLAINTEXT
+      KAFKA_BROKERS: kafka:9092
+    links: 
+      - kafka
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: host.docker.internal
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: consulta-atualizada:1:1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+  postgres:
+    image: postgres:9
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: testpostgres
