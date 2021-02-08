@@ -14,6 +14,10 @@ def make_app():
   environment = os.environ.get("APPLICATION_ENV", "development")
   application = Flask(__name__)
   application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+  application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+  application.app_context().push()
+
+  # Configura as API's
   api.init_app(application)
 
   # inicia banco de dados
